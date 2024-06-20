@@ -8,16 +8,23 @@ import cors from "cors";
 dotenv.config();
 
 const app = express();
-app.use(cors(process.env.IP_ADDRESS));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Origin", "Content-Type", "Accept", "Authorization"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.post("/mockup-generator", async (req, res) => {
   const body = await req.body;
   const { name, image, designId, designs, productType, sessionId } = body;
-
+  console.log(body);
   const browser = await puppeteer.launch({
     headless: true, // Enable headless mode for faster execution
-    executablePath: "/usr/bin/chromium-browser",
+    //executablePath: "/usr/bin/chromium-browser",
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
