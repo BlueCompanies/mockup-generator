@@ -8,15 +8,7 @@ import cors from "cors";
 dotenv.config();
 
 const app = express();
-// CORS middleware
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Origin", "Content-Type", "Accept", "Authorization"],
-    credentials: true,
-  })
-);
+app.use(cors(process.env.IP_ADDRESS));
 app.use(express.json());
 
 app.post("/mockup-generator", async (req, res) => {
