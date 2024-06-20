@@ -12,9 +12,9 @@ app.use(cors(process.env.IP_ADDRESS));
 app.use(express.json());
 
 app.post("/mockup-generator", async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   const body = await req.body;
   const { name, image, designId, designs, productType, sessionId } = body;
-  console.log(body);
   const browser = await puppeteer.launch({
     headless: true, // Enable headless mode for faster execution
     executablePath: "/usr/bin/chromium-browser",
