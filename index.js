@@ -17,7 +17,7 @@ app.post("/mockup-generator", async (req, res) => {
   const { name, image, designId, designs, productType, sessionId } = body;
   const browser = await puppeteer.launch({
     headless: true, // Enable headless mode for faster execution
-    //executablePath: "/usr/bin/chromium-browser",
+    executablePath: "/usr/bin/chromium-browser",
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
@@ -58,6 +58,7 @@ app.post("/mockup-generator", async (req, res) => {
   });
 
   const [page] = await browser.pages();
+  console.log(image, name);
   const photopeaIframeContent = {
     files: [
       image ||
