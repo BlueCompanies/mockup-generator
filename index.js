@@ -9,16 +9,13 @@ import { WebSocket } from "ws";
 dotenv.config();
 
 const app = express();
-app.use(cors("https://impretion-shops.pages.dev"));
+app.use(cors("*"));
 app.use(express.json());
 
 const MAX_SESSIONS = 50;
 
 app.post("/mockup-generator", async (req, res) => {
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://impretion-shops.pages.dev"
-  );
+  res.header("Access-Control-Allow-Origin", "*");
   const body = await req.body;
   const { name, image, designId, designs, productType, sessionId } = body;
   const browser = await puppeteer.launch({
