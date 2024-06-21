@@ -3,13 +3,13 @@ import puppeteer, { launch } from "puppeteer";
 import dotenv from "dotenv";
 import awsS3 from "./_lib/aws.js";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import cors from "cors";
+//import cors from "cors";
 import { WebSocket } from "ws";
 
 dotenv.config();
 
 const app = express();
-app.use(cors(process.env.IP_ADDRESS));
+//app.use(cors(process.env.IP_ADDRESS));
 app.use(express.json());
 
 const MAX_SESSIONS = 50;
