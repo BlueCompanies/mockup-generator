@@ -152,8 +152,8 @@ app.post("/test-mockup", async (req, res) => {
     // Lanzar una nueva instancia de Puppeteer
     const browser = await puppeteer.launch({
       headless: true, // Enable headless mode for faster execution
-      executablePath: "/usr/bin/chromium-browser",
-      args: [`--remote-debugging-port=${debuggingPort}`],
+      //executablePath: "/usr/bin/chromium-browser",
+      args: ["--no-sandbox", `--remote-debugging-port=${debuggingPort}`],
     });
 
     console.log(
