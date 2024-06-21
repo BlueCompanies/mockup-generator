@@ -3,22 +3,19 @@ import puppeteer, { launch } from "puppeteer";
 import dotenv from "dotenv";
 import awsS3 from "./_lib/aws.js";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-//import cors from "cors";
+import cors from "cors";
 import { WebSocket } from "ws";
 
 dotenv.config();
 
 const app = express();
-//app.use(cors(process.env.IP_ADDRESS));
+app.use(cors("*"));
 app.use(express.json());
 
 const MAX_SESSIONS = 50;
 
 app.post("/mockup-generator", async (req, res) => {
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://impretion-shops.pages.dev"
-  );
+  res.header("Access-Control-Allow-Origin", "*");
   const body = await req.body;
   const { name, image, designId, designs, productType, sessionId } = body;
   const browser = await puppeteer.launch({
