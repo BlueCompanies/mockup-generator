@@ -113,9 +113,11 @@ app.post("/mockup-generator", async (req, res) => {
 
         await awsS3().send(command);
 
-        res.status(200).send({
-          image: `https://xyzstorage.store/impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${designId}-${id}.webp`,
-        });
+        res
+          .status(200)
+          .send(
+            `https://xyzstorage.store/impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${designId}-${id}.webp`
+          );
       } else {
         console.error("Received data is not an ArrayBuffer", buffer);
         res.status(500).send("Invalid data received.");
