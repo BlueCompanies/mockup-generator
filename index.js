@@ -101,17 +101,17 @@ app.post("/mockup-generator", async (req, res) => {
         const uint8Array = new Uint8Array(buffer);
         const arrayBuffer = uint8Array.buffer;
 
+        const uuid = new ShortUniqueId({ length: 10 });
+        const id = uuid.rnd();
+
         const command = new PutObjectCommand({
           Bucket: "impretion",
           // We make sure to put the designId as the image file so we can cache the mockup.
-          Key: `impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${designId}.webp`,
+          Key: `impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${designId}-${id}.webp`,
           Body: arrayBuffer,
         });
 
         await awsS3().send(command);
-
-        const uuid = new ShortUniqueId({ length: 10 });
-        const id = uuid.rnd();
 
         res
           .status(200)
