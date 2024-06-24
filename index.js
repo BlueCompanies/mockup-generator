@@ -109,10 +109,13 @@ app.post("/mockup-generator", async (req, res) => {
 
         await awsS3().send(command);
 
+        const uuid = new ShortUniqueId({ length: 10 });
+        const id = uuid.rnd();
+
         res
           .status(200)
           .send(
-            `https://xyzstorage.store/impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${designId}.webp`
+            `https://xyzstorage.store/impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${designId}-$${id}.webp`
           );
       } else {
         console.error("Received data is not an ArrayBuffer", buffer);
