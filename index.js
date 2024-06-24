@@ -5,6 +5,7 @@ import awsS3 from "./_lib/aws.js";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import cors from "cors";
 import { WebSocket } from "ws";
+import ShortUniqueId from "short-unique-id";
 
 dotenv.config();
 
