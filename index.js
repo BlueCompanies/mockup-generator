@@ -116,7 +116,7 @@ app.post("/mockup-generator", async (req, res) => {
         res
           .status(200)
           .send(
-            `https://xyzstorage.store/impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${designId}-${id}.webp`
+            `https://xyzstorage.store/impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${designId}-${id}-${Date.now()}.webp`
           );
       } else {
         console.error("Received data is not an ArrayBuffer", buffer);
