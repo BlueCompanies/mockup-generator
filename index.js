@@ -107,7 +107,16 @@ app.post("/mockup-generator", async (req, res) => {
         const command = new PutObjectCommand({
           Bucket: "impretion",
           // We make sure to put the designId as the image file so we can cache the mockup.
-          Key: `impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${designId}-${id}-${Date.now()}.webp`,
+          Key:
+            "impretion-shops/user-temp-sessions-files/" +
+            sessionId +
+            "/temp-images/" +
+            designId +
+            "-" +
+            id +
+            "-" +
+            Date.now() +
+            ".webp",
           Body: arrayBuffer,
         });
 
