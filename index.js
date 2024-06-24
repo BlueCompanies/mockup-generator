@@ -107,16 +107,7 @@ app.post("/mockup-generator", async (req, res) => {
         const command = new PutObjectCommand({
           Bucket: "impretion",
           // We make sure to put the designId as the image file so we can cache the mockup.
-          Key:
-            "impretion-shops/user-temp-sessions-files/" +
-            sessionId +
-            "/temp-images/" +
-            designId +
-            "-" +
-            id +
-            "-" +
-            Date.now() +
-            ".webp",
+          Key: `impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${designId}-${id}-${Date.now()}.webp`,
           Body: arrayBuffer,
         });
 
@@ -124,9 +115,9 @@ app.post("/mockup-generator", async (req, res) => {
 
         res
           .status(200)
-          .send(
-            `https://xyzstorage.store/impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${designId}-$${id}.webp`
-          );
+          .json({
+            image: `https://xyzstorage.store/impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${designId}-$${id}.webp`,
+          });
       } else {
         console.error("Received data is not an ArrayBuffer", buffer);
         res.status(500).send("Invalid data received.");
