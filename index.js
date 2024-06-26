@@ -103,7 +103,6 @@ app.post("/mockup-generator", async (req, res) => {
   // Expose a function to handle ArrayBuffer in the Node.js context
   await page.exposeFunction("sendBuffer", async (buffer) => {
     try {
-      console.log(buffer);
       if (Array.isArray(buffer)) {
         const uint8Array = new Uint8Array(buffer);
         const arrayBuffer = uint8Array.buffer;
@@ -133,7 +132,6 @@ app.post("/mockup-generator", async (req, res) => {
     } catch (error) {
       console.error("Error processing buffer:", error);
       res.status(500).send("Error processing buffer.");
-      await browser.close();
     } finally {
       await browser.close();
     }
