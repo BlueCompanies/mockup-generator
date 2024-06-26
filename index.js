@@ -133,6 +133,7 @@ app.post("/mockup-generator", async (req, res) => {
     } catch (error) {
       console.error("Error processing buffer:", error);
       res.status(500).send("Error processing buffer.");
+      await browser.close();
     } finally {
       await browser.close();
     }
