@@ -27,7 +27,7 @@ app.post("/mockup-generator", async (req, res) => {
   } = body;
 
   const browser = await puppeteer.launch({
-    headless: false, // Enable headless mode for faster execution
+    headless: true, // Enable headless mode for faster execution
     executablePath: "/usr/bin/chromium-browser",
     args: [
       "--no-sandbox",
