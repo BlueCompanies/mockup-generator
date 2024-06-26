@@ -27,7 +27,7 @@ app.post("/mockup-generator", async (req, res) => {
   } = body;
 
   const browser = await puppeteer.launch({
-    headless: true, // Enable headless mode for faster execution
+    headless: true,
     executablePath: "/usr/bin/chromium-browser",
     args: [
       "--no-sandbox",
@@ -62,12 +62,6 @@ app.post("/mockup-generator", async (req, res) => {
       "--disable-blink-features=AutomationControlled",
       "--disable-blink-features=InterestCohort",
     ],
-    /*
-    defaultViewport: {
-      width: 1,
-      height: 1,
-    },
-     */
   });
 
   const [page] = await browser.pages();
@@ -90,12 +84,7 @@ app.post("/mockup-generator", async (req, res) => {
 
   const iframeUrl = `https://www.photopea.com#${encodedContent}`;
 
-  const htmlContent = `
-    <iframe
-        src="${iframeUrl}"
-        loading="lazy"
-    ></iframe>
-  `;
+  const htmlContent = `<iframe src="${iframeUrl}" loading="lazy"></iframe>`;
 
   // Set the content of the page
   await page.setContent(htmlContent);
@@ -151,6 +140,11 @@ app.post("/mockup-generator", async (req, res) => {
       }
     });
   });
+
+  // Ensure the browser closes after 10 seconds
+  setTimeout(async () => {
+    await browser.close();
+  }, 10000);
 });
 
 /*
@@ -272,6 +266,7 @@ async function photopeaIframeExecution(
     });
   });
 }
+
 app.post("/test-mockup", async (req, res) => {
   let connectedBrowser;
 
