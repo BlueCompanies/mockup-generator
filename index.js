@@ -13,15 +13,22 @@ const app = express();
 app.use(cors("*"));
 app.use(express.json());
 
-const MAX_SESSIONS = 50;
-
 app.post("/mockup-generator", async (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   const body = await req.body;
-  const { name, image, designId, designs, productType, sessionId } = body;
+  const {
+    name,
+    image,
+    designId,
+    designs,
+    productType,
+    sessionId,
+    additionalScript,
+  } = body;
+
   const browser = await puppeteer.launch({
-    headless: true, // Enable headless mode for faster execution
-    executablePath: "/usr/bin/chromium-browser",
+    headless: false, // Enable headless mode for faster execution
+    //executablePath: "/usr/bin/chromium-browser",
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
@@ -55,10 +62,12 @@ app.post("/mockup-generator", async (req, res) => {
       "--disable-blink-features=AutomationControlled",
       "--disable-blink-features=InterestCohort",
     ],
+    /*
     defaultViewport: {
       width: 1,
       height: 1,
     },
+     */
   });
 
   const [page] = await browser.pages();
@@ -72,10 +81,7 @@ app.post("/mockup-generator", async (req, res) => {
         ? `https://xyzstorage.store/impretion-shops/psd-designs/${designs}/${productType}/no-design.psd`
         : `https://xyzstorage.store/impretion-shops/psd-designs/${designs}/${productType}/${designId}.psd`,
     ],
-    script:
-      "function openSmartObjectContents(smartObjectLayer) { if (!smartObjectLayer || smartObjectLayer.kind !== LayerKind.SMARTOBJECT) { return; } if (smartObjectLayer.name.startsWith('#')) { var docRef = app.activeDocument; docRef.activeLayer = smartObjectLayer; var idEditContents = stringIDToTypeID('placedLayerEditContents'); var desc = new ActionDescriptor(); executeAction(idEditContents, desc, DialogModes.NO); app.activeDocument.paste(); var newLayer = app.activeDocument.activeLayer; var smartObjectWidth = app.activeDocument.width; var smartObjectHeight = app.activeDocument.height; var newLayerWidth = newLayer.bounds[2] - newLayer.bounds[0]; var newLayerHeight = newLayer.bounds[3] - newLayer.bounds[1]; var widthScale = (smartObjectWidth / newLayerWidth) * 100; newLayer.resize(widthScale, widthScale, AnchorPosition.MIDDLECENTER); newLayerHeight = newLayer.bounds[3] - newLayer.bounds[1]; if (newLayerHeight < smartObjectHeight) { var heightScale = (smartObjectHeight / newLayerHeight) * 100; newLayer.resize(heightScale, heightScale, AnchorPosition.MIDDLECENTER); } newLayer.translate((smartObjectWidth - (newLayer.bounds[2] - newLayer.bounds[0])) / 2 - newLayer.bounds[0], (smartObjectHeight - (newLayer.bounds[3] - newLayer.bounds[1])) / 2 - newLayer.bounds[1]); var placeholderLayerFound = false; for (var i = app.activeDocument.layers.length - 1; i >= 0; i--) { var currentLayer = app.activeDocument.layers[i]; if (currentLayer !== newLayer && currentLayer.name.includes('!')) { currentLayer.remove(); } if (currentLayer.name === '!placeholder') { placeholderLayerFound = true; } } if (!placeholderLayerFound) { app.echoToOE('placeholderLayerError'); } else { newLayer.name = '!placeholder'; app.activeDocument.save(); app.activeDocument.close(SaveOptions.SAVECHANGES); } } } function processActiveDocument() { var doc = app.activeDocument; try { var layer = doc.layers.getByName('$name'); if (layer && layer.kind === LayerKind.TEXT) { layer.textItem.contents = '" +
-      name +
-      "'; layer.textItem.justification = Justification.CENTER; } } catch (e) {} if (app.documents.length === 1) { var firstLayer = doc.layers[0]; doc.activeLayer = firstLayer; firstLayer.copy(); } for (var j = 0; j < doc.layers.length; j++) { var layer = doc.layers[j]; openSmartObjectContents(layer); } if (app.documents.length !== 1) { doc.saveToOE('webp:0.8'); } app.echoToOE('processed');} processActiveDocument();",
+    script: `function openSmartObjectContents(smartObjectLayer) { if (!smartObjectLayer || smartObjectLayer.kind !== LayerKind.SMARTOBJECT) { return; } if (smartObjectLayer.name.startsWith('#')) { var docRef = app.activeDocument; docRef.activeLayer = smartObjectLayer; var idEditContents = stringIDToTypeID('placedLayerEditContents'); var desc = new ActionDescriptor(); executeAction(idEditContents, desc, DialogModes.NO); app.activeDocument.paste(); var newLayer = app.activeDocument.activeLayer; var smartObjectWidth = app.activeDocument.width; var smartObjectHeight = app.activeDocument.height; var newLayerWidth = newLayer.bounds[2] - newLayer.bounds[0]; var newLayerHeight = newLayer.bounds[3] - newLayer.bounds[1]; var widthScale = (smartObjectWidth / newLayerWidth) * 100; newLayer.resize(widthScale, widthScale, AnchorPosition.MIDDLECENTER); newLayerHeight = newLayer.bounds[3] - newLayer.bounds[1]; if (newLayerHeight < smartObjectHeight) { var heightScale = (smartObjectHeight / newLayerHeight) * 100; newLayer.resize(heightScale, heightScale, AnchorPosition.MIDDLECENTER); } newLayer.translate((smartObjectWidth - (newLayer.bounds[2] - newLayer.bounds[0])) / 2 - newLayer.bounds[0], (smartObjectHeight - (newLayer.bounds[3] - newLayer.bounds[1])) / 2 - newLayer.bounds[1]); var placeholderLayerFound = false; for (var i = app.activeDocument.layers.length - 1; i >= 0; i--) { var currentLayer = app.activeDocument.layers[i]; if (currentLayer !== newLayer && currentLayer.name.includes('!')) { currentLayer.remove(); } if (currentLayer.name === '!placeholder') { placeholderLayerFound = true; } } if (!placeholderLayerFound) { app.echoToOE('placeholderLayerError'); } else { newLayer.name = '!placeholder'; app.activeDocument.save(); app.activeDocument.close(SaveOptions.SAVECHANGES); } } } function processActiveDocument() { var doc = app.activeDocument; try { var layer = doc.layers.getByName('$name'); if (layer && layer.kind === LayerKind.TEXT) { layer.textItem.contents = '${name}'; layer.textItem.justification = Justification.CENTER; } } catch (e) {} if (app.documents.length === 1) { var firstLayer = doc.layers[0]; doc.activeLayer = firstLayer; firstLayer.copy(); } for (var j = 0; j < doc.layers.length; j++) { var layer = doc.layers[j]; openSmartObjectContents(layer); } if (app.documents.length !== 1) { ${additionalScript} doc.saveToOE('webp:0.8'); } app.echoToOE('processed');} processActiveDocument();`,
   };
 
   const encodedContent = encodeURIComponent(
@@ -97,6 +103,7 @@ app.post("/mockup-generator", async (req, res) => {
   // Expose a function to handle ArrayBuffer in the Node.js context
   await page.exposeFunction("sendBuffer", async (buffer) => {
     try {
+      console.log(buffer);
       if (Array.isArray(buffer)) {
         const uint8Array = new Uint8Array(buffer);
         const arrayBuffer = uint8Array.buffer;
@@ -114,8 +121,7 @@ app.post("/mockup-generator", async (req, res) => {
         });
 
         await awsS3().send(command);
-
-        res
+        return res
           .status(200)
           .send(
             `https://xyzstorage.store/impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${designId}-${id}-${date}.webp`
@@ -148,9 +154,9 @@ app.post("/mockup-generator", async (req, res) => {
   });
 });
 
+/*
 let browserCounter = 0;
 const browsers = new Map();
-
 async function launchSession() {
   const debuggingPort = 9222 + browserCounter;
   const browserId = browserCounter++;
@@ -267,7 +273,6 @@ async function photopeaIframeExecution(
     });
   });
 }
-
 app.post("/test-mockup", async (req, res) => {
   let connectedBrowser;
 
@@ -338,6 +343,8 @@ app.post("/test-mockup", async (req, res) => {
     });
   }
 });
+ */
+
 app.listen(8080, () => {
   console.log("Server is running on port 8080");
 });
