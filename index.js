@@ -104,7 +104,7 @@ app.post("/mockup-generator", async (req, res) => {
         const command = new PutObjectCommand({
           Bucket: "impretion",
           // We make sure to put the designId as the image file so we can cache the mockup.
-          Key: `impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${designId}-${id}-${date}.webp`,
+          Key: `impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${id}-${date}.webp`,
           Body: arrayBuffer,
         });
 
@@ -112,7 +112,7 @@ app.post("/mockup-generator", async (req, res) => {
         return res
           .status(200)
           .send(
-            `https://xyzstorage.store/impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${designId}-${id}-${date}.webp`
+            `https://xyzstorage.store/impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${id}-${date}.webp`
           );
       } else {
         console.error("Received data is not an ArrayBuffer", buffer);
