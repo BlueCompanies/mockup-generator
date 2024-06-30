@@ -18,8 +18,8 @@ app.post("/mockup-generator", async (req, res) => {
   const { name, image, designPSDUrl, sessionId, additionalScript } = body;
 
   const browser = await puppeteer.launch({
-    headless: false,
-    //executablePath: "/usr/bin/chromium-browser",
+    headless: true,
+    executablePath: "/usr/bin/chromium-browser",
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
