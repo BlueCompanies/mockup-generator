@@ -129,7 +129,9 @@ app.post("/mockup-generator", async (req, res) => {
   // Add event listener within page.evaluate to listen to postMessage events from the iframe
   await page.evaluate(() => {
     window.addEventListener("message", (event) => {
+      console.log("--test new message: ", event.data);
       if (event.data instanceof ArrayBuffer) {
+        console.log("--test arraybuffer", event.data);
         // Send the buffer back to Node.js context
         window.sendBuffer(Array.from(new Uint8Array(event.data)));
       } else {
