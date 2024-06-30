@@ -16,15 +16,7 @@ app.use(express.json());
 app.post("/mockup-generator", async (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   const body = await req.body;
-  const {
-    name,
-    image,
-    designPSDUrl,
-    designs,
-    productType,
-    sessionId,
-    additionalScript,
-  } = body;
+  const { name, image, designPSDUrl, sessionId, additionalScript } = body;
 
   const browser = await puppeteer.launch({
     headless: true,
@@ -65,7 +57,7 @@ app.post("/mockup-generator", async (req, res) => {
   });
 
   const [page] = await browser.pages();
-
+  console.log(name, image, designPSDUrl, sessionId, additionalScript);
   const photopeaIframeContent = {
     files: [
       image.length > 0
