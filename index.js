@@ -104,6 +104,7 @@ app.post("/mockup-generator", async (req, res) => {
 
         await awsS3().send(command);
         console.log(
+          "IMAGEN FINAL: ",
           `https://xyzstorage.store/impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${id}-${date}.webp`
         );
         return res
