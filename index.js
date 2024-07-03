@@ -9,11 +9,16 @@ import ShortUniqueId from "short-unique-id";
 dotenv.config();
 
 const app = express();
-app.use(cors("*"));
+app.use(cors());
 app.use(express.json());
 
 app.post("/mockup-generator", async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   const body = await req.body;
   const { name, image, designPSDUrl, sessionId, additionalScript } = body;
 
@@ -146,9 +151,11 @@ app.post("/mockup-generator", async (req, res) => {
   }, 10000);
 });
 
-app.listen(8080, () => {
+const server = app.listen(8080, () => {
   console.log("Server is running on port 8080");
 });
+
+server.setTimeout(15000);
 
 process.on("SIGINT", function () {
   console.log("\nGracefully shutting down from SIGINT (Ctrl-C)");
