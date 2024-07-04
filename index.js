@@ -163,6 +163,7 @@ app.post("/mockup-generator", async (req, res) => {
       await browser.close();
     }, 10000);
   } catch (error) {
+    console.log(error);
     res.status(500).send("Error en la API");
   }
 });
