@@ -72,9 +72,9 @@ app.post("/mockup-generator", async (req, res) => {
         "--disable-blink-features=InterestCohort",
       ],
     });
-
+    console.log(browser);
     const [page] = await browser.pages();
-    console.log(name, image, designPSDUrl, sessionId, additionalScript);
+
     const photopeaIframeContent = {
       files: [
         image.length > 0
