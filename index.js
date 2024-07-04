@@ -14,17 +14,26 @@ app.use(express.json());
 
 app.post("/mockup-generator", async (req, res) => {
   try {
+    console.log("...................?");
     res.setHeader("Access-Control-Allow-Origin", "*");
+    console.log("...... access-control");
+
     res.setHeader(
       "Access-Control-Allow-Methods",
       "GET, POST, PUT, DELETE, OPTIONS"
     );
+    console.log("...... headers get post...");
+
     res.setHeader(
       "Access-Control-Allow-Headers",
       "Content-Type, Authorization"
     );
+
+    console.log("...... content type");
+
     const body = await req.body;
     const { name, image, designPSDUrl, sessionId, additionalScript } = body;
+    console.log("...... body", body);
 
     const browser = await puppeteer.launch({
       headless: true,
