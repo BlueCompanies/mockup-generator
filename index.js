@@ -14,34 +14,24 @@ app.use(express.json());
 
 app.post("/mockup-generator", async (req, res) => {
   try {
-    console.log("...................?");
     res.setHeader("Access-Control-Allow-Origin", "*");
-    console.log("...... access-control");
-
     res.setHeader(
       "Access-Control-Allow-Methods",
       "GET, POST, PUT, DELETE, OPTIONS"
     );
-    console.log("...... headers get post...");
-
     res.setHeader(
       "Access-Control-Allow-Headers",
       "Content-Type, Authorization"
     );
-
-    console.log("...... content type");
-
     const body = await req.body;
     const { name, image, designPSDUrl, sessionId, additionalScript } = body;
-    console.log("...... body", body);
 
     const browser = await puppeteer.launch({
       headless: true,
       executablePath: "/usr/bin/chromium-browser",
-
+      ignoreDefaultArgs: ["--disable-extensions"],
       args: [
         "--no-sandbox",
-        "--disabled-setupid-sandbox",
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
         "--disable-accelerated-2d-canvas",
@@ -74,9 +64,9 @@ app.post("/mockup-generator", async (req, res) => {
         "--disable-blink-features=InterestCohort",
       ],
     });
-    console.log(browser);
-    const [page] = await browser.pages();
 
+    const [page] = await browser.pages();
+    console.log(name, image, designPSDUrl, sessionId, additionalScript);
     const photopeaIframeContent = {
       files: [
         image.length > 0
@@ -165,7 +155,6 @@ app.post("/mockup-generator", async (req, res) => {
       await browser.close();
     }, 10000);
   } catch (error) {
-    console.log(error);
     res.status(500).send("Error en la API");
   }
 });
