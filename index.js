@@ -106,7 +106,7 @@ app.post("/mockup-generator", async (req, res) => {
 
           const bucketKeyEnv =
             devEnv === true
-              ? `impretion-shops-true/user-temp-sessions-files/${sessionId}/temp-images/${id}-${date}.webp`
+              ? `impretion-shops-test/user-temp-sessions-files/${sessionId}/temp-images/${id}-${date}.webp`
               : `impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${id}-${date}.webp`;
 
           const command = new PutObjectCommand({
