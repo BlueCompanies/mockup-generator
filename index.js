@@ -24,7 +24,8 @@ app.post("/mockup-generator", async (req, res) => {
       "Content-Type, Authorization"
     );
     const body = await req.body;
-    const { name, image, designPSDUrl, sessionId, additionalScript } = body;
+    const { name, image, designPSDUrl, sessionId, additionalScript, devEnv } =
+      body;
 
     const browser = await puppeteer.launch({
       headless: true,
@@ -96,33 +97,30 @@ app.post("/mockup-generator", async (req, res) => {
     await page.exposeFunction("sendBuffer", async (buffer) => {
       try {
         if (Array.isArray(buffer)) {
-          console.log("--test IF BUFFER");
           const uint8Array = new Uint8Array(buffer);
           const arrayBuffer = uint8Array.buffer;
 
           const uuid = new ShortUniqueId({ length: 10, dictionary: "number" });
           const id = uuid.rnd();
-          console.log("--test generated ID" + id);
           const date = Date.now();
-          console.log("--test current date" + date);
+
+          const bucketKeyEnv =
+            devEnv === true
+              ? `impretion-shops-true/user-temp-sessions-files/${sessionId}/temp-images/${id}-${date}.webp`
+              : `impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${id}-${date}.webp`;
+
           const command = new PutObjectCommand({
             Bucket: "impretion",
             // We make sure to put the designId as the image file so we can cache the mockup.
-            Key: `impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${id}-${date}.webp`,
+            Key: bucketKeyEnv,
             Body: arrayBuffer,
           });
-          console.log("--test command putobject" + command);
 
           await awsS3().send(command);
-          console.log(
-            "IMAGEN FINAL: ",
-            `https://xyzstorage.store/impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${id}-${date}.webp`
-          );
+
           return res
             .status(200)
-            .send(
-              `https://xyzstorage.store/impretion-shops/user-temp-sessions-files/${sessionId}/temp-images/${id}-${date}.webp`
-            );
+            .send(`https://xyzstorage.store/${bucketKeyEnv}`);
         } else {
           console.error("Received data is not an ArrayBuffer", buffer);
           res.status(500).send("Invalid data received.");
