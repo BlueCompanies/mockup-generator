@@ -14,15 +14,6 @@ app.use(express.json());
 
 app.post("/mockup-generator", async (req, res) => {
   try {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, OPTIONS"
-    );
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization"
-    );
     const body = await req.body;
     const { name, image, designPSDUrl, sessionId, additionalScript, devEnv } =
       body;
