@@ -9,18 +9,20 @@ import ShortUniqueId from "short-unique-id";
 dotenv.config();
 
 const app = express();
+
 app.use(
   cors({
-    origin: ["http://localhost:8080", "https://impretion-shops.com"],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: [
-      "Accept-Version",
-      "Authorization",
-      "Credentials",
-      "Content-Type",
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:8080",
+      "https://impretion-shops.com",
     ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
+
 app.use(express.json());
 
 app.post("/mockup-generator", async (req, res) => {
