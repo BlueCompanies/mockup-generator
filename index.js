@@ -11,9 +11,14 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://impretion-shops.com"],
+    origin: ["http://localhost:8080", "https://impretion-shops.com"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: [
+      "Accept-Version",
+      "Authorization",
+      "Credentials",
+      "Content-Type",
+    ],
   })
 );
 app.use(express.json());
