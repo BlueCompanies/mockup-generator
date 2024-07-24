@@ -9,8 +9,22 @@ import ShortUniqueId from "short-unique-id";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+const allowedOrigins = ["http://localhost:3000", "https://impretion-shops.com"];
+
+const corsOptions = (req, callback) => {
+  const origin = req.header("Origin");
+  if (allowedOrigins.includes(origin)) {
+    callback(null, { origin: true });
+  } else {
+    callback(new Error("Not allowed by CORS"));
+  }
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+
+// Resto del código...
 
 app.post("/mockup-generator", async (req, res) => {
   try {
