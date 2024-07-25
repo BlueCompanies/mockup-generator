@@ -10,6 +10,7 @@ dotenv.config();
 
 const app = express();
 
+/*
 const allowedOrigins = ["http://localhost:3000", "https://impretion-shops.com"];
 
 const corsOptions = (req, callback) => {
@@ -22,6 +23,7 @@ const corsOptions = (req, callback) => {
 };
 
 app.use(cors(corsOptions));
+*/
 app.use(express.json());
 
 // Resto del código...
